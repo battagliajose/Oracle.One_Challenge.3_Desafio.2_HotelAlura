@@ -6,11 +6,11 @@ import dao.ReservaDAO;
 import factory.ConnectionFactory;
 import model.Reserva;
 
-public class ReservasController {
+public class ReservaController {
 	
 	private ReservaDAO reservaDAO;
 	
-	public ReservasController() {
+	public ReservaController() {
 
 		Connection con = new ConnectionFactory().getConexion();
 		this.reservaDAO = new ReservaDAO(con);

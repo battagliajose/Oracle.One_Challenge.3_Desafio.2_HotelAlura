@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Reserva;
 
@@ -37,6 +39,14 @@ public class ReservaDAO {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public List<Reserva> read () {
+		List<Reserva> reservas = new ArrayList<>();
+		
+		
+		
+		return reservas;
 	}
 	
 	public void delete (int id) {

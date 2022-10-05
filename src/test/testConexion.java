@@ -6,7 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import controller.ReservasController;
+import controller.ReservaController;
 
 import java.sql.Date;
 
@@ -17,7 +17,7 @@ import model.Reserva;
 public class testConexion {
 
 	public static void main(String[] args) throws ParseException {
-		ReservasController reservasController = new ReservasController();
+		ReservaController reservasController = new ReservaController();
 
 		
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -27,8 +27,8 @@ public class testConexion {
 		
 		reservasController.create(new Reserva(fechaEntrada, fechaSalida, 1500, "Efectivo"));
 		
-		reservasController.delete(7);
-		
+		//reservasController.delete(4);
+
 	}
 
 }
