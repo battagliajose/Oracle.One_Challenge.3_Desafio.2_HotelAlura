@@ -19,6 +19,8 @@ import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.text.Format;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -151,7 +153,7 @@ public class ReservasView extends JFrame {
 		txtFechaS.setFont(new Font("Roboto", Font.PLAIN, 18));
 		txtFechaS.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
+				calcularValor();
 			}
 		});
 		txtFechaS.setDateFormatString("yyyy-MM-dd");
@@ -305,10 +307,11 @@ public class ReservasView extends JFrame {
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaE.getDate() != null && ReservasView.txtFechaS.getDate() != null) {		
+				if (ReservasView.txtFechaE.getDate() != null && ReservasView.txtFechaS.getDate() != null) {	
+					guardarReserva();
 					RegistroHuesped registro = new RegistroHuesped();
 					registro.setVisible(true);
-					guardarReserva();
+					
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
 				}
@@ -327,12 +330,38 @@ public class ReservasView extends JFrame {
 		lblSiguiente.setBounds(0, 0, 122, 35);
 		btnsiguiente.add(lblSiguiente);
 	}
+
+	private void calcularValor() {
+		
+		String fechaEntrada = ((JTextField) txtFechaE.getDateEditor().getUiComponent()).getText();
+		String fechaSalida = ((JTextField) txtFechaS.getDateEditor().getUiComponent()).getText();
+		
+		if (fechaEntrada.length() > 0 && fechaSalida.length() > 0) {
+			try {
+				LocalDate FechaEntrada = LocalDate.parse(fechaEntrada);
+				LocalDate FechaSalida = LocalDate.parse(fechaSalida);
 	
-	public void guardarReserva() {
+			    long daysDiff = ChronoUnit.DAYS.between(FechaEntrada, FechaSalida);
+			    if (daysDiff > 0) {
+				    System.out.println("Dias entre la entrada y la salida: " + daysDiff);
+				    txtValor.setText(String.valueOf(daysDiff * 300));
+			    } else {
+			    	FechaSalida = FechaEntrada.plusDays(1);
+			    	txtFechaS.setDate(Date.valueOf(FechaSalida.toString()));
+			    	JOptionPane.showMessageDialog(contentPane, "Error: la fecha de salida no puede ser menor a la de entrada.", "Error", JOptionPane.ERROR_MESSAGE);
+			    }
+			    
+			}catch(Exception e){
+			    e.printStackTrace();
+			}
+		}
+	}
+	
+	private void guardarReserva() {
 		try {
 			Date FechaEntrada = Date.valueOf(((JTextField) txtFechaE.getDateEditor().getUiComponent()).getText());
 			Date FechaSalida = Date.valueOf(((JTextField) txtFechaS.getDateEditor().getUiComponent()).getText());
-			int valor = 100;
+			int valor = Integer.parseInt(txtValor.getText());
 			String formaDePago = txtFormaPago.getSelectedItem().toString();
 			
 			Reserva reserva = new Reserva(FechaEntrada, FechaSalida, valor, formaDePago);
