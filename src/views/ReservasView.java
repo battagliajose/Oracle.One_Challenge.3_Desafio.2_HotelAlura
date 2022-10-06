@@ -339,7 +339,7 @@ public class ReservasView extends JFrame {
 			
 			reservaController.create(reserva);
 			
-			JOptionPane.showConfirmDialog(contentPane, "Reserva creada");
+			JOptionPane.showMessageDialog(contentPane, "Reserva creada");
 			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(contentPane, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

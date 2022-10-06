@@ -19,29 +19,25 @@ public class UsuarioDAO {
 	
 	public boolean validate (Usuario usuario) {
 		
-		String query = "SELECT usuario, clave FROM usuarios where usuario = ?";
-		String clave = "";
+		String query = "SELECT usuario, clave FROM usuarios where usuario = ? and clave = ?";
 		
 		try (PreparedStatement pStm = connection.prepareStatement(query)){
-			pStm.setString(1, usuario.getNombre());
+			pStm.setString(1, usuario.getNombre().toLowerCase());
+			pStm.setString(2, usuario.getClave().toLowerCase());
 			
 			pStm.execute();
 			
 			try (ResultSet resultSet = pStm.getResultSet()) {
-				while(resultSet.next()) {
-					clave = (resultSet.getString(2));
+				while(resultSet.next()) { 
+					return true;
 				}
-				
 			}
 			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 		
-		System.out.println("[" + usuario.getClave() +"]");
-		System.out.println("[" + clave +"]");
-		
-		return (clave == usuario.getClave());
+		return false;
 	}
 	
 }
