@@ -216,6 +216,7 @@ public class RegistroHuesped extends JFrame {
 		txtNreserva.setColumns(10);
 		txtNreserva.setBackground(Color.WHITE);
 		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		txtNreserva.setEditable(false);
 		txtNreserva.setText(reservaId.toString());
 		contentPane.add(txtNreserva);
 		
@@ -355,7 +356,15 @@ public class RegistroHuesped extends JFrame {
 	}
 	
 	private boolean validarCampos() {
-		return true;
+		boolean camposValidados = true;
+		
+		if(txtNombre.getText().length() == 0) camposValidados = false;
+		if(txtApellido.getText().length() == 0) camposValidados = false;
+		if(((JTextField) txtFechaN.getDateEditor().getUiComponent()).getText().length() == 0) camposValidados = false;
+		if(txtNacionalidad.getSelectedItem().toString().length() == 0) camposValidados = false;
+		if(txtTelefono.getText().length() == 0) camposValidados = false;
+		
+		return camposValidados;
 	}
 	
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	
