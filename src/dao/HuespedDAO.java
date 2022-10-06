@@ -8,55 +8,57 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Huesped;
 import model.Reserva;
 
-public class ReservaDAO {
+public class HuespedDAO {
 	private Connection connection;
 	
-	public ReservaDAO (Connection connection) {
+	public HuespedDAO (Connection connection) {
 		this.connection = connection;
 	}
 	
-	public int create (Reserva reserva) {
+	public Integer create (Huesped huesped) {
 		
-		String query = "INSERT INTO reservas (fechaEntrada, fechaSalida,"
-				+ " valor, formaDePago) VALUES (?, ?, ?, ?)";
+		String query = "INSERT INTO huespedes (nombre, apellido,"
+				+ " fechaNacimiento, nacionalidad, telefono, idReserva) VALUES (?, ?, ?, ?, ?, ?)";
 		
 		try (PreparedStatement pStm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
-			pStm.setDate(1, reserva.getFechaEntrada());
-			pStm.setDate(2, reserva.getFechaSalida());
-			pStm.setInt(3, reserva.getValor());
-			pStm.setString(4,reserva.getFormaDePago());
+			pStm.setString(1, huesped.getNombre());
+			pStm.setString(2, huesped.getApellido());
+			pStm.setDate(3, huesped.getFechaNacimiento());
+			pStm.setString(4,huesped.getNacionalidad());
+			pStm.setString(5,huesped.getTelefono());
+			pStm.setInt(6,huesped.getIdReserva());
 			
 			int affectedRows = pStm.executeUpdate();
 			
 	        if (affectedRows == 0) {
-	            throw new SQLException("Fallo la creacion de la reserva");
+	            throw new SQLException("Fallo la creacion del Huesped");
 	        }
 			
 			try (ResultSet resultSet = pStm.getGeneratedKeys()) {
 				while (resultSet.next()) {
-					reserva.setId(resultSet.getInt(1));
+					huesped.setId(resultSet.getInt(1));
 				}
+				return huesped.getId();
 			}
-			
-			return reserva.getId();
 			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public List<Reserva> read () {
-		List<Reserva> reservas = new ArrayList<>();
+	public List<Huesped> read () {
+		List<Huesped> huespedes = new ArrayList<>();
 		
 		
 		
-		return reservas;
+		return huespedes;
 	}
 	
 	public void delete (int id) {
-		String query = "DELETE FROM reservas WHERE id = ?";
+		String query = "DELETE FROM huesped WHERE id = ?";
 		
 		try (PreparedStatement pStm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			pStm.setInt(1, id);

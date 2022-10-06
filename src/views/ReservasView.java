@@ -232,8 +232,8 @@ public class ReservasView extends JFrame {
 			}			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				 btnexit.setBackground(new Color(12, 138, 199));
-			     labelExit.setForeground(Color.white);
+				 btnexit.setBackground(Color.white);
+			     labelExit.setForeground(Color.black);
 			}
 		});
 		btnexit.setLayout(null);
@@ -308,9 +308,11 @@ public class ReservasView extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (ReservasView.txtFechaE.getDate() != null && ReservasView.txtFechaS.getDate() != null) {	
-					guardarReserva();
-					RegistroHuesped registro = new RegistroHuesped();
-					registro.setVisible(true);
+					Integer reservaID = guardarReserva();
+					if (reservaID > 0) {
+						RegistroHuesped registro = new RegistroHuesped(reservaID);
+						registro.setVisible(true);
+					}
 					
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
@@ -357,7 +359,7 @@ public class ReservasView extends JFrame {
 		}
 	}
 	
-	private void guardarReserva() {
+	private Integer guardarReserva() {
 		try {
 			Date FechaEntrada = Date.valueOf(((JTextField) txtFechaE.getDateEditor().getUiComponent()).getText());
 			Date FechaSalida = Date.valueOf(((JTextField) txtFechaS.getDateEditor().getUiComponent()).getText());
@@ -366,13 +368,17 @@ public class ReservasView extends JFrame {
 			
 			Reserva reserva = new Reserva(FechaEntrada, FechaSalida, valor, formaDePago);
 			
-			reservaController.create(reserva);
+			Integer reservaId = reservaController.create(reserva);
 			
-			JOptionPane.showMessageDialog(contentPane, "Reserva creada");
+			JOptionPane.showMessageDialog(contentPane, "Reserva creada - Nº " + reservaId);
+			
+			return reservaId;
 			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(contentPane, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return -1;
 		}
+		
 	}
 
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	

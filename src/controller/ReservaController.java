@@ -17,8 +17,8 @@ public class ReservaController {
 		
 	}
 	
-	public void create(Reserva reserva) {
-		reservaDAO.create(reserva);
+	public int create(Reserva reserva) {
+		return reservaDAO.create(reserva);
 	}
 	
 	public void delete(int id) {
