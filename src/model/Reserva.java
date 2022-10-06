@@ -49,4 +49,9 @@ public class Reserva {
 		this.id = id;
 	}
 	
+	@Override
+	public String toString() {
+		return this.getId() + " - " + this.getFechaEntrada().toString() + " - " + this.getFechaSalida().toString() + " - " + this.getValor(); 
+	}
+	
 }

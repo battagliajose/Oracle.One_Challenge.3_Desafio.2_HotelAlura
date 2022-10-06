@@ -48,13 +48,32 @@ public class ReservaDAO {
 	}
 	
 	public List<Reserva> read () {
-		List<Reserva> reservas = new ArrayList<>();
-		
-		
-		
-		return reservas;
+		String query = "SELECT id, fechaEntrada, fechaSalida, valor, formaDePago FROM reservas";
+		try {
+			final PreparedStatement statement = connection.prepareStatement(query);
+			try(statement) {
+				statement.execute();
+				
+				ResultSet resultSet = statement.getResultSet();
+				
+				List<Reserva> reservas = new ArrayList<>();
+				
+				while(resultSet.next()) {
+					Reserva reserva = new Reserva(resultSet.getInt("id"),
+							resultSet.getDate("fechaEntrada"),
+							resultSet.getDate("fechaSalida"),
+							resultSet.getInt("valor"),
+							resultSet.getString("formaDePago"));
+					
+					reservas.add(reserva);
+				}
+				return reservas;
+			} 
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
-	
+
 	public void delete (int id) {
 		String query = "DELETE FROM reservas WHERE id = ?";
 		

@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.Connection;
+import java.util.List;
 
 import dao.ReservaDAO;
 import factory.ConnectionFactory;
@@ -19,6 +20,10 @@ public class ReservaController {
 	
 	public int create(Reserva reserva) {
 		return reservaDAO.create(reserva);
+	}
+	
+	public List<Reserva> read() {
+		return reservaDAO.read();
 	}
 	
 	public void delete(int id) {

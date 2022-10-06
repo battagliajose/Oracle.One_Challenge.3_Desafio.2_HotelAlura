@@ -211,7 +211,7 @@ public class Busqueda extends JFrame {
 		btnbuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				buscar();
 			}
 		});
 		btnbuscar.setLayout(null);
@@ -255,6 +255,12 @@ public class Busqueda extends JFrame {
 		lblEliminar.setBounds(0, 0, 122, 35);
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
+	}
+	
+	private void buscar() {
+		System.out.println("buscando..");
+		
+		
 	}
 	
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
