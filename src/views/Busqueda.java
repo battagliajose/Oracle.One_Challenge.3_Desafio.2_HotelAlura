@@ -5,6 +5,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import controller.HuespedController;
+import controller.ReservaController;
+import dao.ReservaDAO;
+import factory.ConnectionFactory;
+import model.Huesped;
+import model.Reserva;
+
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -24,6 +32,7 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Connection;
 
 @SuppressWarnings("serial")
 public class Busqueda extends JFrame {
@@ -211,7 +220,14 @@ public class Busqueda extends JFrame {
 		btnbuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				buscar();
+				if(panel.getSelectedIndex() == 0)
+				{
+					System.out.println("index 0");
+					buscarReserva();
+				} else if (panel.getSelectedIndex() == 1) {
+					System.out.println("index 1");
+					buscarHuesped();
+				}
 			}
 		});
 		btnbuscar.setLayout(null);
@@ -257,10 +273,42 @@ public class Busqueda extends JFrame {
 		setResizable(false);
 	}
 	
-	private void buscar() {
+	private void buscarReserva() { 
 		System.out.println("buscando..");
 		
+		ReservaController reservaController = new ReservaController();
 		
+		List<Reserva> reservas = reservaController.read(txtBuscar.getText());
+		
+		modelo.setRowCount(0);
+		
+		reservas.forEach(reserva -> modelo.addRow(new Object[] {
+			reserva.getId(),
+			reserva.getFechaEntrada(),
+			reserva.getFechaSalida(),
+			reserva.getValor(),
+			reserva.getFormaDePago()
+		}));
+	}
+	
+	private void buscarHuesped() { 
+		System.out.println("buscando..");
+		
+		HuespedController huespedController = new HuespedController();
+		
+		List<Huesped> huespedes = huespedController.read(txtBuscar.getText());
+		
+		modeloH.setRowCount(0);
+		
+		huespedes.forEach(huesped -> modeloH.addRow(new Object[] {
+			huesped.getId(),
+			huesped.getNombre(),
+			huesped.getApellido(),
+			huesped.getFechaNacimiento(),
+			huesped.getNacionalidad(),
+			huesped.getTelefono(),
+			huesped.getIdReserva()
+		}));
 	}
 	
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"

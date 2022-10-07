@@ -26,6 +26,10 @@ public class ReservaController {
 		return reservaDAO.read();
 	}
 	
+	public List<Reserva> read(String filter) {
+		return reservaDAO.read(filter);
+	}
+	
 	public void delete(int id) {
 		reservaDAO.delete(id);
 	}

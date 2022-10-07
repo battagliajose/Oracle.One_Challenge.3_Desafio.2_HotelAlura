@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.Connection;
+import java.util.List;
 
 import dao.HuespedDAO;
 import dao.ReservaDAO;
@@ -23,5 +24,9 @@ public class HuespedController {
 	
 	public void delete(int id) {
 		huespedDAO.delete(id);
+	}
+
+	public List<Huesped> read(String text) {
+		return huespedDAO.read(text);
 	}
 }

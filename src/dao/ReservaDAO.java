@@ -73,6 +73,36 @@ public class ReservaDAO {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public List<Reserva> read (String filter) {
+		String query = "SELECT id, fechaEntrada, fechaSalida, valor, formaDePago FROM reservas WHERE id = ?";
+		try {
+			final PreparedStatement statement = connection.prepareStatement(query);
+			try(statement) {
+				statement.setString(1, filter);
+
+				
+				statement.execute();
+				
+				ResultSet resultSet = statement.getResultSet();
+				
+				List<Reserva> reservas = new ArrayList<>();
+				
+				while(resultSet.next()) {
+					Reserva reserva = new Reserva(resultSet.getInt("id"),
+							resultSet.getDate("fechaEntrada"),
+							resultSet.getDate("fechaSalida"),
+							resultSet.getInt("valor"),
+							resultSet.getString("formaDePago"));
+					
+					reservas.add(reserva);
+				}
+				return reservas;
+			} 
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public void delete (int id) {
 		String query = "DELETE FROM reservas WHERE id = ?";

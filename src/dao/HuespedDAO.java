@@ -69,5 +69,41 @@ public class HuespedDAO {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
+	public List<Huesped> read(String filter) {
+		String query = "SELECT id, nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva FROM huespedes WHERE id LIKE ? OR nombre LIKE ? or apellido LIKE ?";
+		try {
+			final PreparedStatement statement = connection.prepareStatement(query);
+			try(statement) {
+;
+				statement.setString(1, "%" + filter + "%");
+				statement.setString(2, "%" + filter + "%");
+				statement.setString(3, "%" + filter + "%");
+				
+				statement.execute();
+				
+				ResultSet resultSet = statement.getResultSet();
+				
+				List<Huesped> huespedes = new ArrayList<>();
+				
+				while(resultSet.next()) {
+					Huesped huesped = new Huesped(
+							resultSet.getInt("id"),
+							resultSet.getString("nombre"),
+							resultSet.getString("apellido"),
+							resultSet.getDate("fechaNacimiento"),
+							resultSet.getString("nacionalidad"),
+							resultSet.getString("telefono"),
+							resultSet.getInt("idReserva")
+							);
+					
+					huespedes.add(huesped);
+				}
+				return huespedes;
+			} 
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
+	
