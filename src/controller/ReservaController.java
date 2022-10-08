@@ -33,4 +33,8 @@ public class ReservaController {
 	public void delete(int id) {
 		reservaDAO.delete(id);
 	}
+
+	public int update(Reserva reserva) {
+		return reservaDAO.update(reserva);
+	}
 }

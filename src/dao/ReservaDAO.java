@@ -116,5 +116,29 @@ public class ReservaDAO {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public int update(Reserva reserva) {
+		try {
+			String query = "UPDATE reservas SET fechaEntrada = ?, fechaSalida = ?"
+					+ ", valor = ?, formaDePago = ? WHERE id = ?;";
+			
+			final PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			try(statement) { 
+				statement.setDate(1, reserva.getFechaEntrada());
+				statement.setDate(2, reserva.getFechaSalida());
+				statement.setInt(3, reserva.getValor());
+				statement.setString(4, reserva.getFormaDePago());
+				statement.setInt(5, reserva.getId());
+				
+				statement.execute(); 
+				
+			    int updateCount = statement.getUpdateCount();
+		
+			    return updateCount;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 	
 }

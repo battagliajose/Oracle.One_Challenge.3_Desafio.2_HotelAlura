@@ -345,10 +345,22 @@ public class Busqueda extends JFrame {
 		ReservaController reservaController = new ReservaController();
 		HuespedController huespedController = new HuespedController();
 		
-		int id = 4; //obtener id de linea seleccionada.
-		
-		huespedController.deleteByReserva(id);
-		reservaController.delete(id);
+		if(tieneFilaElegidaReserva()) {
+			Optional.ofNullable(modelo.getValueAt(tbReservas.getSelectedRow(), tbReservas.getSelectedColumn()))
+            .ifPresentOrElse(fila -> {
+                Integer id = Integer.valueOf(modelo.getValueAt(tbReservas.getSelectedRow(), 0).toString());
+
+                huespedController.deleteByReserva(id);
+                reservaController.delete(id);
+                
+                JOptionPane.showMessageDialog(this, String.format("Item eliminado con éxito!"));
+                modelo.setRowCount(0);
+                
+            }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
+		} else {
+            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+            return;
+		}
 	}
 	
 	private void eliminarHuesped() {
@@ -372,7 +384,30 @@ public class Busqueda extends JFrame {
 	}
 	
 	private void modificarReserva() {
+		ReservaController reservaController = new ReservaController();
 		
+		if(tieneFilaElegidaReserva()) {
+			Optional.ofNullable(modelo.getValueAt(tbReservas.getSelectedRow(), tbReservas.getSelectedColumn()))
+            .ifPresentOrElse(fila -> {
+                Reserva reserva = new Reserva(
+                		Integer.valueOf(modelo.getValueAt(tbReservas.getSelectedRow(), 0).toString()),
+                		Date.valueOf(modelo.getValueAt(tbReservas.getSelectedRow(), 1).toString()),
+                		Date.valueOf(modelo.getValueAt(tbReservas.getSelectedRow(), 2).toString()),
+                		Integer.valueOf(modelo.getValueAt(tbReservas.getSelectedRow(), 3).toString()),
+                		(String) modelo.getValueAt(tbReservas.getSelectedRow(), 4).toString()
+                		);
+
+                int filasModificadas;
+
+            	filasModificadas = reservaController.update(reserva);
+                
+                JOptionPane.showMessageDialog(this, String.format("%d item modificado con éxito!", filasModificadas));
+                
+            }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
+		} else {
+            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+            return;
+		}
 	}
 	
 	private void modificarHuesped() {
@@ -405,11 +440,11 @@ public class Busqueda extends JFrame {
 	}
 	
     private boolean tieneFilaElegidaReserva() {
-        return tbReservas.getSelectedRowCount() == 0 || tbReservas.getSelectedColumnCount() == 0;
+        return !(tbReservas.getSelectedRowCount() == 0 || tbReservas.getSelectedColumnCount() == 0);
     }
     
     private boolean tieneFilaElegidaHuesped() {
-        return tbHuespedes.getSelectedRowCount() == 0 || tbReservas.getSelectedColumnCount() == 0;
+        return !(tbHuespedes.getSelectedRowCount() == 0 || tbHuespedes.getSelectedColumnCount() == 0);
     }
     
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
