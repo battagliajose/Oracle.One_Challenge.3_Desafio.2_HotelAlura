@@ -58,7 +58,7 @@ public class HuespedDAO {
 	}
 	
 	public void delete (int id) {
-		String query = "DELETE FROM huesped WHERE id = ?";
+		String query = "DELETE FROM huespedes WHERE id = ?";
 		
 		try (PreparedStatement pStm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			pStm.setInt(1, id);
@@ -101,6 +101,46 @@ public class HuespedDAO {
 				}
 				return huespedes;
 			} 
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void deleteByReserva(int id) {
+		String query = "DELETE FROM huespedes WHERE idReserva = ?";
+		
+		try (PreparedStatement pStm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+			pStm.setInt(1, id);
+						
+			pStm.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		
+	}
+
+	public int update(Huesped huesped) {
+		try {
+			String query = "UPDATE huespedes SET nombre = ?, apellido = ?"
+					+ ", fechaNacimiento = ?, nacionalidad = ?, telefono = ?, idReserva = ? WHERE id = ?;";
+			
+			final PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			try(statement) { 
+				statement.setString(1, huesped.getNombre());
+				statement.setString(2, huesped.getApellido());
+				statement.setDate(3, huesped.getFechaNacimiento());
+				statement.setString(4, huesped.getNacionalidad());
+				statement.setString(5, huesped.getTelefono());
+				statement.setInt(6, huesped.getIdReserva());
+				statement.setInt(7, huesped.getId());
+				
+				statement.execute(); 
+				
+			    int updateCount = statement.getUpdateCount();
+		
+			    return updateCount;
+			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

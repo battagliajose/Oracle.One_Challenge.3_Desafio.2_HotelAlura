@@ -20,9 +20,12 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Optional;
 import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
 import java.awt.Toolkit;
@@ -33,6 +36,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.Connection;
+import java.sql.Date;
 
 @SuppressWarnings("serial")
 public class Busqueda extends JFrame {
@@ -248,6 +252,19 @@ public class Busqueda extends JFrame {
 		btnEditar.setBackground(new Color(12, 138, 199));
 		btnEditar.setBounds(635, 508, 122, 35);
 		btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		btnEditar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(panel.getSelectedIndex() == 0)
+				{
+					System.out.println("Editando Reserva");
+					modificarReserva();
+				} else if (panel.getSelectedIndex() == 1) {
+					System.out.println("Editando huesped...");
+					modificarHuesped();
+				}
+			}
+		});
 		contentPane.add(btnEditar);
 		
 		JLabel lblEditar = new JLabel("EDITAR");
@@ -262,6 +279,19 @@ public class Busqueda extends JFrame {
 		btnEliminar.setBackground(new Color(12, 138, 199));
 		btnEliminar.setBounds(767, 508, 122, 35);
 		btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		btnEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(panel.getSelectedIndex() == 0)
+				{
+					System.out.println("Eliminando Reserva");
+					eliminarReserva();
+				} else if (panel.getSelectedIndex() == 1) {
+					System.out.println("Eliminando huesped...");
+					eliminarHuesped();
+				}
+			}
+		});
 		contentPane.add(btnEliminar);
 		
 		JLabel lblEliminar = new JLabel("ELIMINAR");
@@ -311,6 +341,77 @@ public class Busqueda extends JFrame {
 		}));
 	}
 	
+	private void eliminarReserva() {
+		ReservaController reservaController = new ReservaController();
+		HuespedController huespedController = new HuespedController();
+		
+		int id = 4; //obtener id de linea seleccionada.
+		
+		huespedController.deleteByReserva(id);
+		reservaController.delete(id);
+	}
+	
+	private void eliminarHuesped() {
+		HuespedController huespedController = new HuespedController();
+		
+		if(tieneFilaElegidaHuesped()) {
+			Optional.ofNullable(modeloH.getValueAt(tbHuespedes.getSelectedRow(), tbHuespedes.getSelectedColumn()))
+            .ifPresentOrElse(fila -> {
+                Integer id = Integer.valueOf(modeloH.getValueAt(tbHuespedes.getSelectedRow(), 0).toString());
+
+                huespedController.delete(id);
+                
+                JOptionPane.showMessageDialog(this, String.format("Item eliminado con éxito!"));
+                modeloH.setRowCount(0);
+                
+            }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
+		} else {
+            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+            return;
+		}
+	}
+	
+	private void modificarReserva() {
+		
+	}
+	
+	private void modificarHuesped() {
+		HuespedController huespedController = new HuespedController();
+		
+		if(tieneFilaElegidaHuesped()) {
+			Optional.ofNullable(modeloH.getValueAt(tbHuespedes.getSelectedRow(), tbHuespedes.getSelectedColumn()))
+            .ifPresentOrElse(fila -> {
+                Huesped huesped = new Huesped(
+                		Integer.valueOf(modeloH.getValueAt(tbHuespedes.getSelectedRow(), 0).toString()),
+                		(String) modeloH.getValueAt(tbHuespedes.getSelectedRow(), 1),
+                		(String) modeloH.getValueAt(tbHuespedes.getSelectedRow(), 2),
+                		Date.valueOf(modeloH.getValueAt(tbHuespedes.getSelectedRow(), 3).toString()),
+                		(String) modeloH.getValueAt(tbHuespedes.getSelectedRow(), 4).toString(),
+                		(String) modeloH.getValueAt(tbHuespedes.getSelectedRow(), 5).toString(),
+                		Integer.valueOf(modeloH.getValueAt(tbHuespedes.getSelectedRow(), 6).toString())
+                		);
+
+                int filasModificadas;
+
+            	filasModificadas = huespedController.update(huesped);
+                
+                JOptionPane.showMessageDialog(this, String.format("%d item modificado con éxito!", filasModificadas));
+                
+            }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
+		} else {
+            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+            return;
+		}
+	}
+	
+    private boolean tieneFilaElegidaReserva() {
+        return tbReservas.getSelectedRowCount() == 0 || tbReservas.getSelectedColumnCount() == 0;
+    }
+    
+    private boolean tieneFilaElegidaHuesped() {
+        return tbHuespedes.getSelectedRowCount() == 0 || tbReservas.getSelectedColumnCount() == 0;
+    }
+    
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();

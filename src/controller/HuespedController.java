@@ -29,4 +29,13 @@ public class HuespedController {
 	public List<Huesped> read(String text) {
 		return huespedDAO.read(text);
 	}
+
+	public void deleteByReserva(int id) {
+		huespedDAO.deleteByReserva(id);
+		
+	}
+
+	public int update(Huesped huesped) {
+		return huespedDAO.update(huesped);
+	}
 }
