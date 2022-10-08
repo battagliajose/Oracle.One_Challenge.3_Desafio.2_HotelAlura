@@ -46,6 +46,8 @@ public class ReservasView extends JFrame {
 	private JLabel lblValorSimbolo; 
 	private JLabel labelAtras;
 	
+	private final int valorPorDia = 3500;
+	
 	private ReservaController reservaController;
 
 	/**
@@ -167,7 +169,7 @@ public class ReservasView extends JFrame {
 		txtValor.setBackground(SystemColor.text);
 		txtValor.setHorizontalAlignment(SwingConstants.CENTER);
 		txtValor.setForeground(Color.BLACK);
-		txtValor.setBounds(78, 328, 43, 33);
+		txtValor.setBounds(78, 328, 73, 33);
 		txtValor.setEditable(false);
 		txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
 		txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
@@ -346,7 +348,7 @@ public class ReservasView extends JFrame {
 			    long daysDiff = ChronoUnit.DAYS.between(FechaEntrada, FechaSalida);
 			    if (daysDiff > 0) {
 				    System.out.println("Dias entre la entrada y la salida: " + daysDiff);
-				    txtValor.setText(String.valueOf(daysDiff * 300));
+				    txtValor.setText(String.valueOf(daysDiff * valorPorDia));
 			    } else {
 			    	FechaSalida = FechaEntrada.plusDays(1);
 			    	txtFechaS.setDate(Date.valueOf(FechaSalida.toString()));
